@@ -1,22 +1,24 @@
 <template>
   <div class="dropdown" v-click-outside="hideDropdown">
-    <label for="dropdown-input" class="dropdown-label"> Гражданство </label>
+    <label :for="dropdownId" class="dropdown-label"> <slot></slot> </label>
     <input
       v-if="Object.keys(selectedCitizenship).length === 0"
-      ref="dropdowninput"
       v-model.trim="inputValue"
       class="dropdown-input"
-      id="dropdown-input"
+      :id="dropdownId"
       type="text"
       placeholder="Введите страну на латинице"
-      @click="showDrpodown"
+      @click="showDropdown"
+      :name="inputName"
     />
     <input
       type="text"
       v-else
       @click="resetSelection"
       class="dropdown-input"
+      :id="dropdownId"
       :value="selectedCitizenship.nationality"
+      :name="inputName"
     />
 
     <div v-show="isDropdownOpen" class="dropdown-list">
@@ -48,6 +50,14 @@ export default {
       debouncedInput: '',
     }
   },
+  props: {
+    inputName: {
+      type: String,
+    },
+    dropdownId: {
+      type: String,
+    },
+  },
 
   directives: {
     ClickOutside,
@@ -63,9 +73,9 @@ export default {
   mounted() {
     this.getList()
   },
-  computed: {},
+
   methods: {
-    showDrpodown() {
+    showDropdown() {
       this.isDropdownOpen = true
     },
     hideDropdown(event) {
@@ -75,7 +85,6 @@ export default {
     },
     resetSelection() {
       this.selectedCitizenship = {}
-      this.$nextTick(() => this.$refs.dropdowninput.focus())
       this.$emit('on-item-reset')
     },
     selectCitizenship(theCitizenship) {
@@ -85,7 +94,6 @@ export default {
     },
     itemVisible(item) {
       let currentName = item.nationality.toLowerCase()
-
       let currentInput = this.debouncedInput.toLowerCase()
       return currentName.includes(currentInput)
     },
@@ -128,7 +136,7 @@ export default {
 
 .dropdown-list {
   position: absolute;
-
+  z-index: 5;
   width: 100%;
   max-height: 500px;
   margin-top: 4px;
