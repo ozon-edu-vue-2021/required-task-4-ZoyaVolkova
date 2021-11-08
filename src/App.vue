@@ -5,23 +5,26 @@
 </template>
 
 <script>
-import Form from "./components/Form.vue";
+import Form from './components/Form.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Form,
   },
-};
+}
 </script>
 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
-  background-color: #fafafa;
-  padding: 24px;
+
   box-sizing: border-box;
+
+  width: 1200px;
+
+  margin: 30px auto;
 }
 
 html,
