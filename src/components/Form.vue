@@ -1,5 +1,5 @@
 <template>
-  <form @submit="sendForm" class="form">
+  <form @submit.prevent="sendForm" @keyup.enter="checkValidity" class="form">
     <div class="person">
       <h3 class="form-title">Личные данные</h3>
       <div class="name">
@@ -261,8 +261,6 @@ export default {
 
   methods: {
     sendForm(event) {
-      event.preventDefault()
-      console.log(event.target)
       const data = new FormData(event.target)
       const dataArr = Array.from(data).filter((item) => !!item[1])
       const dataObj = JSON.stringify(Object.fromEntries(dataArr))
@@ -272,7 +270,13 @@ export default {
     checkValidity() {
       this.$el.querySelectorAll('input').forEach((input) => {
         if (!input.validity.valid) {
-          input.style.border = '1px solid red'
+          if (!input.classList.contains('invalid')) {
+            input.classList.add('invalid')
+          }
+        } else {
+          if (input.classList.contains('invalid')) {
+            input.classList.remove('invalid')
+          }
         }
       })
     },
@@ -346,5 +350,8 @@ export default {
 .submit-button:hover {
   cursor: pointer;
   background: rgb(9, 130, 230);
+}
+.invalid {
+  border: 1px solid red !important;
 }
 </style>

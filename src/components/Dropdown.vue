@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown" v-click-outside="hideDropdown">
+  <div class="dropdown">
     <label :for="dropdownId" class="dropdown-label"> <slot></slot> </label>
     <input
       v-if="Object.keys(selectedCitizenship).length === 0"
@@ -29,6 +29,7 @@
         :key="item.id"
         class="dropdown-item"
         ref="dropdownitem"
+        v-click-outside="hideDropdown"
       >
         {{ item.nationality }}
       </div>
@@ -62,12 +63,11 @@ export default {
   directives: {
     ClickOutside,
   },
-  created() {
-    this.debouncedGetInput = debounce(this.getInputValue, 2000)
-  },
+
   watch: {
     inputValue(newValue) {
-      this.debouncedGetInput(newValue)
+      const debouncedGetInput = debounce(this.getInputValue, 2000)
+      debouncedGetInput(newValue)
     },
   },
   mounted() {
@@ -78,10 +78,8 @@ export default {
     showDropdown() {
       this.isDropdownOpen = true
     },
-    hideDropdown(event) {
-      if (event.target !== this.$refs.dropdownitem) {
-        this.isDropdownOpen = false
-      }
+    hideDropdown() {
+      this.isDropdownOpen = false
     },
     resetSelection() {
       this.selectedCitizenship = {}
