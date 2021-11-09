@@ -21,7 +21,11 @@
       :name="inputName"
     />
 
-    <div v-show="isDropdownOpen" class="dropdown-list">
+    <div
+      v-show="isDropdownOpen"
+      class="dropdown-list"
+      v-click-outside="hideDropdown"
+    >
       <div
         @click="selectCitizenship(item)"
         v-show="itemVisible(item)"
@@ -29,7 +33,6 @@
         :key="item.id"
         class="dropdown-item"
         ref="dropdownitem"
-        v-click-outside="hideDropdown"
       >
         {{ item.nationality }}
       </div>
@@ -83,10 +86,12 @@ export default {
     },
     resetSelection() {
       this.selectedCitizenship = {}
+
       this.$emit('on-item-reset')
     },
     selectCitizenship(theCitizenship) {
       this.selectedCitizenship = theCitizenship
+
       this.inputValue = ''
       this.$emit('on-item-selected', theCitizenship)
     },
